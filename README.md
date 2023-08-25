@@ -26,7 +26,6 @@ pm.environment.set("hostId", item.hostId);
 
 
 ----------------------------------
-
 let iActual = parseInt(pm.environment.get("indice"));
 let chats = JSON.parse(pm.environment.get("chats"));
 
@@ -38,12 +37,22 @@ pm.test(`Status code: ${chat.status}`, function () {
 });
 
 if (chat.status == 201) {
+
+
+    pm.test("Your test name", function () {
+        var jsonData = pm.request.json();
+        console.log(jsonData)
+        pm.expect(jsonData.value).to.eql(100);
+    });
+
     // Test status code 201
-    pm.test("La respuesta devuelve un GUID", function () {
-        const response = pm.response.text();
+    pm.test("La respuesta devuelve un GUID válido", function () {
+        const response = pm.request.text();
         console.log(response)
+        
         const guidRegex = /^\"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}\"$/;
-        pm.expect(response).to.match(guidRegex);
+        
+        pm.expect(response.guestId).to.match(guidRegex);
     });
 }
 
@@ -57,6 +66,9 @@ if (iActual >= chats.length) {
     iActual = 0;
 }
 pm.environment.set("indice", iActual);
+
+
+
 
 
 
